@@ -43,18 +43,22 @@ def draw_k_line(id, year="2020"):
             ax.add_line(line)
 
     text=plt.Text(idx_lowest,all_lowest-(all_highest-all_lowest)/12,'%.2f'%all_lowest, color="yellow", fontsize=10)
-    ax._add_text(text)
+    ax.add_artist(text)
     text=plt.Text(idx_highest,all_highest+(all_highest-all_lowest)/20,'%.2f'%all_highest, color="cyan", fontsize=10)
-    ax._add_text(text)
+    ax.add_artist(text)
 
     ax.set_ylim(all_lowest - (all_highest-all_lowest)/5, all_highest + (all_highest-all_lowest)/5)
 
-    plt.grid(axis="y",linestyle='--')
+    plt.grid(axis="y",linestyle='--', color='grey')
     plt.title(response_dict["symbol"]+"/"+year)
     plt.show()
+    print(response_dict["name"])
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
-        print("usage: python draw_k_line.py year id")
+        #print("usage: python draw_k_line.py year id")
+        draw_k_line("0000001", "2020")
+        draw_k_line("0600536", "2020")
+        draw_k_line("0601009", "2020")
     else:
         draw_k_line(sys.argv[2], sys.argv[1])
