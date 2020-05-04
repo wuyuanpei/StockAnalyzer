@@ -1,8 +1,13 @@
 import requests
 import matplotlib.pyplot as plt
+import matplotlib
 import sys
 import json
 from utils import *
+
+# 设置中文字体和负号正常显示
+matplotlib.rcParams['font.sans-serif'] = ['SimHei']
+matplotlib.rcParams['axes.unicode_minus'] = False
 
 # 画出某一股票某一年的k线图
 # id:       股票的代号
@@ -93,11 +98,11 @@ def draw_k_line(id, year="2020", foldername=None):
     # 设置y轴长度和图的标签
     ax.set_ylim(all_lowest - (all_highest-all_lowest)/5, all_highest + (all_highest-all_lowest)/5)
     plt.grid(axis="y",linestyle='--', color='grey')
-    plt.title(response_dict["symbol"]+"/"+year)
+    plt.title(response_dict["name"]+"/"+response_dict["symbol"]+"/"+year)
 
-    # 绘图 打印股票名称
+    # 绘图
     plt.show()
-    print(response_dict["name"])
+    
 
 # 使用在线API画k线图
 if __name__ == "__main__":

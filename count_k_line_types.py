@@ -1,6 +1,11 @@
 import matplotlib.pyplot as plt
+import matplotlib
 from utils import *
 from stats import stats
+
+# 设置中文字体和负号正常显示
+matplotlib.rcParams['font.sans-serif'] = ['SimHei']
+matplotlib.rcParams['axes.unicode_minus'] = False
 
 def count_klinetypes(dict):
     # 数据天数
@@ -26,9 +31,25 @@ def add_klinetypes_counts(stat, data):
     return stat
 
 if __name__ == "__main__":
-    items = stats("./data", stat_op = add_klinetypes_counts, data_fn=count_klinetypes,id=None,year=None)
-    plt.bar(range(len(items)),items, color=k_line_colors, tick_label=["star","short r","middle r","long r","long g","middle g","short g"])
+
+    labels = ["十字星","短红棒","中红棒","长红棒","长黑棒","中黑棒","短黑棒"]
+
+    items = stats("./data", stat_op = add_klinetypes_counts, data_fn=count_klinetypes, id=None, year="2020")
+    plt.bar(left=range(len(items)), width=0.15, height=[i/sum(items) for i in items], color="red", label="2020")
+
+    items = stats("./data", stat_op = add_klinetypes_counts, data_fn=count_klinetypes, id=None, year="2019")
+    plt.bar(left=[i + 0.15 for i in range(len(items))], width=0.15, height=[i/sum(items) for i in items], color="orange", label="2019")
+    
+    items = stats("./data", stat_op = add_klinetypes_counts, data_fn=count_klinetypes, id=None, year="2018")
+    plt.bar(left=[i + 0.3 for i in range(len(items))], width=0.15, height=[i/sum(items) for i in items], color="green", label="2018")
+
+    items = stats("./data", stat_op = add_klinetypes_counts, data_fn=count_klinetypes, id=None, year="2017")
+    plt.bar(left=[i + 0.45 for i in range(len(items))], width=0.15, height=[i/sum(items) for i in items], color="blue", label="2017")
+
+    items = stats("./data", stat_op = add_klinetypes_counts, data_fn=count_klinetypes, id=None, year="2016")
+    plt.bar(left=[i + 0.6 for i in range(len(items))], width=0.15, height=[i/sum(items) for i in items], color="purple", label="2016")
+    
+    plt.xticks([index + 0.3 for index in range(len(items))], labels)
+
+    plt.legend()
     plt.show()
-
-
-        
