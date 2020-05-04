@@ -23,7 +23,9 @@ def identify_line(start, end):
     else:
         return 0
 
-k_line_colors = ["yellow","tomato","red","darkred","darkgreen","limegreen","greenyellow"] # k线颜色
+# k线颜色
+k_line_colors = ["yellow","tomato","red","darkred","darkgreen","limegreen","greenyellow"]
+
 # 根据k线性质,返回颜色
 # line_type: 
 #   0 十字星
@@ -35,3 +37,19 @@ k_line_colors = ["yellow","tomato","red","darkred","darkgreen","limegreen","gree
 #   green 小,中,大阴线
 def color_line(line_type):
     return k_line_colors[line_type]
+
+# 基本的加法/列表拼接统计方法
+# stat:     历史数据
+# data:     新数据
+# return:   新统计数据
+def add_op(stat, data):
+    return stat + data
+
+# 将历史数据数组与新数据数组每个元素求和
+# stat:     历史数据
+# data:     新数据
+# return:   新统计数组
+def add_list_op(stat, data):
+    for i in range(len(stat)):
+        stat[i] += data[i]
+    return stat

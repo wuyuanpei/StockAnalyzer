@@ -3,7 +3,8 @@ import matplotlib.pyplot as plt
 import matplotlib
 import sys
 import json
-from utils import *
+from utils import identify_line
+from utils import color_line
 
 # 设置中文字体和负号正常显示
 matplotlib.rcParams['font.sans-serif'] = ['SimHei']
@@ -38,23 +39,28 @@ def draw_k_line(id, year="2020", foldername=None):
     # 数据天数
     num = len(response_dict["data"])
 
-    # 窗口、坐标轴设定
-    fig = plt.figure(figsize=(min(num/5, 17),5))
-    ax = fig.add_subplot(111, axisbg="black")
+    # 窗口 坐标轴设定
+    fig = plt.figure(figsize=(min(num/4, 19),10))
+    ax = fig.add_subplot(2,1,1, axisbg="black")
+    ax2 = fig.add_subplot(2,1,2, axisbg="black")
     ax.set_xlim(0, num)
+    ax2.set_xlim(0, num)
 
-    # 记录最高点、最低点
+    # 记录最高点 最低点 成交量
     all_lowest = 100000000
     all_highest = 0
     idx_lowest = 0
     idx_highest = 0
+    hands = []
+    colors = []
     for i in range(num):
         day = response_dict["data"][i]
         start = day[1]
         end = day[2]
         highest = day[3]
         lowest = day[4]
-        
+        hands.append(day[5])
+
         # 更新最低点 最高点
         if lowest < all_lowest:
             all_lowest = lowest
@@ -66,6 +72,14 @@ def draw_k_line(id, year="2020", foldername=None):
         # 查找k线对应的种类 颜色
         line_type = identify_line(start, end)
         c = color_line(line_type)
+        
+        # 交易量颜色 此时黄色是严格等于
+        if end - start > 0:
+            colors.append("red")
+        elif end - start < 0:
+            colors.append("green")
+        else:
+            colors.append("yellow")
 
         # 绘图
         if line_type > 0: # 红线
@@ -95,11 +109,17 @@ def draw_k_line(id, year="2020", foldername=None):
     text=plt.Text(idx_highest_d,all_highest+(all_highest-all_lowest)/20,'%.2f'%all_highest, color="white", fontsize=10)
     ax.add_artist(text)
 
+    # 绘制交易量
+    ax2.bar(x=[i+0.5 for i in range(len(hands))], height=hands, color=colors)
+
     # 设置y轴长度和图的标签
     ax.set_ylim(all_lowest - (all_highest-all_lowest)/5, all_highest + (all_highest-all_lowest)/5)
-    plt.grid(axis="y",linestyle='--', color='grey')
+    ax.grid(axis="y",linestyle='--', color='grey')
+    ax2.grid(axis="y",linestyle='--', color='grey')
+    
     plt.title(response_dict["name"]+"/"+response_dict["symbol"]+"/"+year)
 
+    
     # 绘图
     plt.show()
     
@@ -109,8 +129,8 @@ if __name__ == "__main__":
     if len(sys.argv) != 3:
         print("usage: python draw_k_line.py year id")
         # Examples
-        draw_k_line("0000001", "2020")
+        #draw_k_line("0000001", "2020")
         draw_k_line("0600536", "2020")
-        draw_k_line("0601009", "2020")
+        #draw_k_line("0601009", "2020")
     else:
         draw_k_line(sys.argv[2], sys.argv[1])

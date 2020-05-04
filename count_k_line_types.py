@@ -1,12 +1,17 @@
+from stats import stats
+from utils import identify_line
+from utils import k_line_colors
+from utils import add_list_op
+import sys
 import matplotlib.pyplot as plt
 import matplotlib
-from utils import *
-from stats import stats
-
 # 设置中文字体和负号正常显示
 matplotlib.rcParams['font.sans-serif'] = ['SimHei']
 matplotlib.rcParams['axes.unicode_minus'] = False
 
+# 统计数据中出现的每种种类k线的数量
+# dict:     数据点
+# return:   统计数组 ["十字星","短红棒","中红棒","长红棒","长黑棒","中黑棒","短黑棒"]
 def count_klinetypes(dict):
     # 数据天数
     num = len(dict["data"])
@@ -25,31 +30,32 @@ def count_klinetypes(dict):
     
     return data_stat
 
-def add_klinetypes_counts(stat, data):
-    for i in range(7):
-        stat[i] += data[i]
-    return stat
 
+
+# 画出(某年)(某只)股票的k线类型统计
 if __name__ == "__main__":
-
     labels = ["十字星","短红棒","中红棒","长红棒","长黑棒","中黑棒","短黑棒"]
+    try:
+        if len(sys.argv) > 3:
+            print("usage: python count_k_line_types.py [year]/- [id]")
+        elif len(sys.argv) == 1:
+            items = stats("./data", stat_op = add_list_op, data_fn=count_klinetypes, id=None, year=None)
+            plt.bar(left=range(len(items)), width=0.8, height=[i/sum(items) for i in items], color=k_line_colors)
+            plt.title("All Stock Data in All Years")
+        elif len(sys.argv) == 2:
+            items = stats("./data", stat_op = add_list_op, data_fn=count_klinetypes, id=None, year=sys.argv[1])
+            plt.bar(left=range(len(items)), width=0.8, height=[i/sum(items) for i in items], color=k_line_colors)
+            plt.title("All Stock Data in "+sys.argv[1])
+        elif len(sys.argv) == 3 and sys.argv[1] == '-':
+            items = stats("./data", stat_op = add_list_op, data_fn=count_klinetypes, id=sys.argv[2], year=None)
+            plt.bar(left=range(len(items)), width=0.8, height=[i/sum(items) for i in items], color=k_line_colors)
+            plt.title(sys.argv[2]+" in All Years")
+        else:
+            items = stats("./data", stat_op = add_list_op, data_fn=count_klinetypes, id=sys.argv[2], year=sys.argv[1])
+            plt.bar(left=range(len(items)), width=0.8, height=[i/sum(items) for i in items], color=k_line_colors)
+            plt.title(sys.argv[2]+" in "+sys.argv[1])
 
-    items = stats("./data", stat_op = add_klinetypes_counts, data_fn=count_klinetypes, id=None, year="2020")
-    plt.bar(left=range(len(items)), width=0.15, height=[i/sum(items) for i in items], color="red", label="2020")
-
-    items = stats("./data", stat_op = add_klinetypes_counts, data_fn=count_klinetypes, id=None, year="2019")
-    plt.bar(left=[i + 0.15 for i in range(len(items))], width=0.15, height=[i/sum(items) for i in items], color="orange", label="2019")
-    
-    items = stats("./data", stat_op = add_klinetypes_counts, data_fn=count_klinetypes, id=None, year="2018")
-    plt.bar(left=[i + 0.3 for i in range(len(items))], width=0.15, height=[i/sum(items) for i in items], color="green", label="2018")
-
-    items = stats("./data", stat_op = add_klinetypes_counts, data_fn=count_klinetypes, id=None, year="2017")
-    plt.bar(left=[i + 0.45 for i in range(len(items))], width=0.15, height=[i/sum(items) for i in items], color="blue", label="2017")
-
-    items = stats("./data", stat_op = add_klinetypes_counts, data_fn=count_klinetypes, id=None, year="2016")
-    plt.bar(left=[i + 0.6 for i in range(len(items))], width=0.15, height=[i/sum(items) for i in items], color="purple", label="2016")
-    
-    plt.xticks([index + 0.3 for index in range(len(items))], labels)
-
-    plt.legend()
-    plt.show()
+        plt.xticks(range(len(items)), labels)
+        plt.show()
+    except BaseException:
+        print("Stock/Year not found or invalid!")
