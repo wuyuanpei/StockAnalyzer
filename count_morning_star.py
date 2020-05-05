@@ -1,13 +1,12 @@
 from stats import stats
 from utils import identify_line
-from utils import k_line_colors
 from utils import add_op
 import sys
 
 # 晨星识别参数
 down_scale = 1.25 # 允许影线两端之差超过实体两端的倍数
 
-# 统计参数:如果是晨星在后一天开盘价买入
+# 统计参数:如果是晨星在下一天开盘价买入
 stats_days = 3 # 第stats_days天在开盘价卖出
 
 # 统计数据中出现的晨星 返回最后一天的位置的列表
@@ -30,8 +29,8 @@ def count_morning_star(dict):
         highest1 = day1[3]
         lowest1 = day1[4]
         hand1 = day1[5]
-        # 第一天长黑棒
-        if not (identify_line(start1, end1) == -3 and (highest1-lowest1) < (down_scale * (start1 - end1))):
+        # 第一天长/中黑棒
+        if not (identify_line(start1, end1) <= -2 and (highest1-lowest1) < (down_scale * (start1 - end1))):
             continue
 
         start2 = day2[1]
@@ -48,8 +47,8 @@ def count_morning_star(dict):
         highest3 = day3[3]
         lowest3 = day3[4]
         hand3 = day3[5]
-        # 第三天跳空高开长阳线
-        if not (identify_line(start3, end3) == 3 and start3 > max(start2, end2) and (highest3-lowest3) < (down_scale * (end3 - start3))):
+        # 第三天跳空高开中长阳线
+        if not (identify_line(start3, end3) >= 2 and start3 > max(start2, end2) and (highest3-lowest3) < (down_scale * (end3 - start3))):
             continue
 
         # # 第三天的收盘价高出第一天的开盘价
@@ -96,4 +95,4 @@ if __name__ == "__main__":
             count_lose += 1
 
     print("Number of Morning Star(s): "+str(len(items)))
-    print("Wins vs. Loses: "+str(count_win)+":"+str(count_lose))
+    print("赚钱 vs. 亏钱: "+str(count_win)+":"+str(count_lose))

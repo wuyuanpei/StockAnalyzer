@@ -53,3 +53,15 @@ def add_list_op(stat, data):
     for i in range(len(stat)):
         stat[i] += data[i]
     return stat
+
+# 返回5天的大致趋势
+# end:  5天的收盘价
+# return:   +1涨势 -1跌势 0波动势
+def trend(end1, end2, end3, end4, end5):
+    mean = (end1 + end2 + end3 + end4 + end5)/5
+    if end1 < end2 and end2 < mean and end4 > mean and end5 > mean:
+        return 1
+    elif end1 > end2 and end2 > mean and end4 < mean and end5 < mean:
+        return -1
+    else:
+        return 0

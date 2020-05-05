@@ -5,6 +5,7 @@ import sys
 import json
 from utils import identify_line
 from utils import color_line
+from utils import trend
 
 # 设置中文字体和负号正常显示
 matplotlib.rcParams['font.sans-serif'] = ['SimHei']
@@ -46,13 +47,15 @@ def draw_k_line(id, year="2020", foldername=None):
     ax.set_xlim(0, num)
     ax2.set_xlim(0, num)
 
-    # 记录最高点 最低点 成交量
+    # 记录最高点 最低点 成交量  趋势
     all_lowest = 100000000
     all_highest = 0
     idx_lowest = 0
     idx_highest = 0
     hands = []
     colors = []
+    trs = []
+
     for i in range(num):
         day = response_dict["data"][i]
         start = day[1]
@@ -92,6 +95,21 @@ def draw_k_line(id, year="2020", foldername=None):
             ax.add_patch(rect)
             line = plt.Line2D((i+0.4,i+0.4),(lowest,highest), color=c)
             ax.add_line(line)
+        
+        # 记录趋势标记
+        if i > 3:
+            trs.append(trend(response_dict["data"][i-4][2], \
+                response_dict["data"][i-3][2], response_dict["data"][i-2][2], \
+                response_dict["data"][i-1][2], end))
+
+    # 绘制趋势标记
+    for i in range(4, num):
+        if trs[i-4] == 1:
+            text=plt.Text(i,all_lowest-(all_highest-all_lowest)/5,"^", color="red", fontsize=20)
+            ax.add_artist(text)
+        elif trs[i-4] == -1:
+            text=plt.Text(i,all_lowest-(all_highest-all_lowest)/5,"^", color="green", fontsize=20)
+            ax.add_artist(text)
 
     # 如果在最后一天,调整最高点最低点的显示位置
     if idx_lowest == num - 1:
@@ -130,7 +148,8 @@ if __name__ == "__main__":
         print("usage: python draw_k_line.py year id")
         # Examples
         #draw_k_line("0000001", "2020")
+        #draw_k_line("1399001", "2020")
         draw_k_line("0600536", "2020")
-        #draw_k_line("0601009", "2020")
+        draw_k_line("0601009", "2020")
     else:
         draw_k_line(sys.argv[2], sys.argv[1])

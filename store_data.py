@@ -8,7 +8,7 @@ import os
 #               Y 为6位股票代码
 #               Z 为股票名称(不限字数)
 # write_folder: 写入文件夹
-def store_data(year="2020", stocks_file="stocks2.txt", write_folder="./data"):
+def store_data(year="2020", stocks_file="indices.txt", write_folder="./data"):
     fileList = os.listdir(write_folder)
     with open(stocks_file) as f:
         for line in f:
