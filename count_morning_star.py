@@ -7,7 +7,7 @@ import sys
 down_scale = 1.25 # 允许影线两端之差超过实体两端的倍数
 
 # 统计参数:如果是晨星在下一天开盘价买入
-stats_days = 3 # 第stats_days天在开盘价卖出
+stats_days = 10 # 第stats_days天在收盘价卖出
 
 # 统计数据中出现的晨星 返回最后一天的位置的列表
 # dict:     数据点
@@ -61,8 +61,8 @@ def count_morning_star(dict):
         
         # 统计参数
         if i < num - stats_days:
-            # 比较第stats_days的开盘价和下一天的开盘价
-            if dict["data"][i+stats_days][1] > dict["data"][i+1][1]:
+            # 比较第stats_days的收盘价和下一天的开盘价
+            if dict["data"][i+stats_days][2] > dict["data"][i+1][1]:
                 data_stat.append(dict["name"]+"/"+dict["symbol"]+"/"+dict["data"][i][0]+"/1")
             else:
                 data_stat.append(dict["name"]+"/"+dict["symbol"]+"/"+dict["data"][i][0]+"/0")
