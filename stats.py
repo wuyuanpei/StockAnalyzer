@@ -14,7 +14,8 @@ from tqdm import tqdm
 #                   dict: 数据字典
 # year:         数据年份
 # id:           股票代码
-def stats(foldername, stat_op, data_fn, id=None, year=None):
+# v:            verbose mode, True or False
+def stats(foldername, stat_op, data_fn, id=None, year=None, v=True):
     fileList = os.listdir(foldername)
     # 如果年份和股票代码被声明,则只保留符合条件的数据
     if year is not None:
@@ -23,13 +24,17 @@ def stats(foldername, stat_op, data_fn, id=None, year=None):
         fileList = list(filter(lambda filename:filename[0:7]==id, fileList))
     
     # 文件列表为空
-    if not fileList:
+    if not fileList and v:
         print("No such file(s) found!")
 
     # 统计变量
     stat = None
     # 迭代文件
-    for filename in tqdm(fileList):
+    if v:
+        fns = tqdm(fileList)
+    else:
+        fns = fileList
+    for filename in fns:
         file = open(foldername+"/"+filename)
 
         jstring = file.read().replace("\'","\"")

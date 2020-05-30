@@ -20,16 +20,14 @@ def data_load(dict):
         day = dict["data"][i]
         data_stat.append(day[1:])
     
-    return data_stat
+    return [np.array(data_stat)]
 
 # 将选定的年份与股票转换成ndarray
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print("usage: python data_loader.py [year]/- id")
-    if sys.argv[1] == '-':
-        items = stats("./data", stat_op = add_op, data_fn=data_load, id=sys.argv[2], year=None)
-    else:
-        items = stats("./data", stat_op = add_op, data_fn=data_load, id=sys.argv[2], year=sys.argv[1])
+    items = stats("./data", stat_op = add_op, data_fn=data_load)
     items = np.array(items)
 
-    print(items[:-1,:].shape)
+    print(len(items))
+    print(items[0].shape)
+    print(items[1].shape)
+    print(items[1001].shape)

@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 
-plt.ion()
 
 # 动态绘图器
 class DynamicUpdate():
@@ -8,17 +7,24 @@ class DynamicUpdate():
     # num_x:    所要画的点的个数
     # y_size:   所画点的区间为 0 ~ y_size
     #           如果y_size不声明, 图片的尺寸会动态加载
-    def __init__(self, num_x, y_size = None):
+    # title:    图片标题
+    def __init__(self, num_x, y_size = None, title=None):
+        plt.ion()
         self.max_x = num_x
         self.max_y = y_size
         self.xdata = []
         self.ydata = []
+        if title is None:
+            self.title = "untitled"
+        else:
+            self.title = title
 
     # 运行绘图器
     def on_launch(self):
         # Set up plot
         self.figure, self.ax = plt.subplots()
-        self.lines, = self.ax.plot([],[], 'o')
+        plt.title(self.title)
+        self.lines, = self.ax.plot([],[], '-')
         # Autoscale on unknown axis and known lims on the other
         self.ax.set_autoscaley_on(True)
         self.ax.set_xlim(0, self.max_x)
