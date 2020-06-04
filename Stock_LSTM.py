@@ -3,6 +3,8 @@ from torch import nn
 import torch.nn.functional as F
 import numpy as np
 import random
+from tqdm import tqdm
+from dictionary_builder import build_dict, delete_b2005_2020
 from stats import stats
 from utils import add_op
 from data_loader import data_load
@@ -69,31 +71,36 @@ def train(snn, train_data, test_data=None, epoch = 250, lr = 0.05, save_path = "
 
     # 找到数据数组
     test_data_items = []
-    for tid, (tstarty, tendy) in test_data.items():
+    for tid, (tstarty, tendy) in tqdm(test_data.items()):
         for i in range(tstarty,tendy):
             test_data_item = stats("./data", stat_op = add_op, data_fn=data_load, id=tid, year=str(i), v=False)
             if test_data_item is None:
-                pass
-                #print("year "+str(i)+" is not found!")
+                print(tid+": year "+str(i)+" is not found!")
             else:
                 test_data_items += test_data_item
 
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
-    snn.to(device)
-
+    # 移去没有研究价值的年份
+    test_data_items = list(filter(lambda data: len(data) > 150, test_data_items))
+    print("testing data size: "+str(len(test_data_items)))
 
     print("LOADING TRAINING DATA...")
     items = []
 
-    for id, (starty, endy) in train_data.items():
+    for id, (starty, endy) in tqdm(train_data.items()):
         for i in range(starty,endy):
             item = stats("./data", stat_op = add_op, data_fn=data_load, id=id, year=str(i), v=False)
             if item is None:
-                print("year "+str(i)+" is not found!")
+                print(id+": year "+str(i)+" is not found!")
             else:
                 items += item
 
+    # 移去没有研究价值的年份
+    items = list(filter(lambda data: len(data) > 150, items))
+    print("training data size: "+str(len(items)))
+
+
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    snn.to(device)
     optimizer = torch.optim.Adam(snn.parameters(), lr=lr)   # optimize all parameters
     loss_func = nn.MSELoss()
 
@@ -198,7 +205,7 @@ def sample(snn, id, year):
 
     return loss.item()
 
-
+# Examples. Can use dictionary_builder instead
 TRAINING_DATA = {
     "0600000":(2000,2019),
     "0600004":(2004,2019),
@@ -261,6 +268,7 @@ ALL_DATA = {
 }
 
 if __name__ == "__main__":
-    snn = Stock_LSTM(input_size=6, hidden_size=128, num_layers=1, hidden_linear=32)
-    train(snn, ALL_DATA, None, epoch =50, lr = 0.002, save_path = "./net/NN")
-    # sample(torch.load("./net/NN"), id = "0600000", year=2003)
+    data_dict = build_dict(lambda fn: fn[0:2] == "06", delete_b2005_2020)
+    snn = Stock_LSTM(input_size=6, hidden_size=128, num_layers=1, hidden_linear=64)
+    train(snn, data_dict, None, epoch =300, lr = 0.0003, save_path = "./net/NN")
+    sample(torch.load("./net/NN"), id = "0600004", year=2020)
