@@ -8,7 +8,7 @@ import os
 #               Y 为6位股票代码
 #               Z 为股票名称(不限字数)
 # write_folder: 写入文件夹
-def store_data(year="2020", stocks_file="stocks2.txt", write_folder="./data"):
+def store_data(year="2020", stocks_file="stock_test.txt", write_folder="./data"):
     # fileList = os.listdir(write_folder)
     with open(stocks_file) as f:
         for line in f:
@@ -25,17 +25,51 @@ def store_data(year="2020", stocks_file="stocks2.txt", write_folder="./data"):
                     break
                 
             if r.status_code == 404: # 请求的股票不存在
-                print("Not found:"+line[8:-1]+"/"+year)
+                print("Not found: "+line[0:-1]+"/"+year)
                 continue
 
             # 写入文件
             with open(write_folder+"/"+line[0:7]+"_"+year+".json",'w') as fw:
                 fw.write(str(r.json()))
-                print("stored:"+line[8:-1]+"/"+year)
-            
+                print("stored:"+line[0:-1]+"/"+year)
+
+# 为所有股票下载所有数据，储存在 write_folder 的子目录中
+# 将从year开始下载到上市的第一年或者year_first
+def store_data_all(year="2022", year_first="2018", stocks_file="stock_test.txt", write_folder="./data"):
+    # fileList = os.listdir(write_folder)
+    with open(stocks_file) as f:
+        for line in f:
+
+            year_i = int(year)
+
+            while True:
+                
+                url = "http://img1.money.126.net/data/hs/kline/day/history/"+str(year_i)+"/"+line[0:7]+".json"
+                while True:
+                    try:
+                        r = requests.get(url)
+                    except BaseException: # 请求失败,可能是因为被暂时屏蔽
+                        print("Cannot connect to server!")
+                    else:
+                        break
+                
+                if r.status_code == 404: # 请求的股票已过了第一年上市
+                    break
+
+                # 写入文件
+                with open(write_folder+"/"+line[0:7]+"_"+str(year_i)+".json",'w') as fw:
+                    fw.write(str(r.json()))
+                    print("stored:"+line[0:-1]+"/"+str(year_i))
+                
+                # 检查是否越过起始位置
+                year_i -= 1
+                if year_i < int(year_first):
+                    break
+
+
 # 保持A股上市以来的所有数据
 if __name__ == "__main__":
-    store_data(year="2020")
+    store_data_all()
     # store_data(year="2019")
     # store_data(year="2018")
     # store_data(year="2017")

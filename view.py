@@ -33,8 +33,8 @@ def draw_results(id, year="2020", foldername="./data", prediction="None"):
     # 窗口 坐标轴设定
     plt.ioff()
     fig = plt.figure(figsize=(min(num/4, 19),10))
-    ax = fig.add_subplot(2,1,1, axisbg="black")
-    ax2 = fig.add_subplot(2,1,2, axisbg="black")
+    ax = fig.add_subplot(2,1,1, fc="black")
+    ax2 = fig.add_subplot(2,1,2, fc="black")
     ax.set_xlim(0, num)
     ax2.set_xlim(0, num)
 
