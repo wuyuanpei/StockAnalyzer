@@ -69,7 +69,7 @@ def store_data_all(year="2022", year_first="2018", stocks_file="stock_test.txt",
 
 # 保持A股上市以来的所有数据
 if __name__ == "__main__":
-    store_data_all(stocks_file="stocks.txt")
+    store_data_all(year="2022", year_first="2022", stocks_file="stocks.txt")
     # store_data(year="2019")
     # store_data(year="2018")
     # store_data(year="2017")
