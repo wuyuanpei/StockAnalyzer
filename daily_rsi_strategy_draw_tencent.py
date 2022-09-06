@@ -1,14 +1,14 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import sys
-from daily_rsi_strategy import get_df_price
-from daily_rsi_strategy import get_rsi
-from daily_rsi_strategy import daily_implement_rsi_strategy
+from daily_rsi_strategy_tencent import get_df_price
+from daily_rsi_strategy_tencent import get_rsi
+from daily_rsi_strategy_tencent import daily_implement_rsi_strategy
 
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("usage: python daily_rsi_strategy_draw.py id")
+        print("usage: python daily_rsi_strategy_draw_tencent.py id")
     else:
         stock = sys.argv[1]
         df_price = get_df_price(stock)
