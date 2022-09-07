@@ -13,9 +13,9 @@ if __name__ == "__main__":
         stock = sys.argv[1]
         df_price = get_df_price(stock)
 
-        print(df_price)
-
         df_price['rsi'] = get_rsi(df_price['closeprice'], 6) 
+
+        print(df_price)
         # df_price = df_price.dropna()
         buy_price, sell_price, rsi_signal, trend_signal = daily_implement_rsi_strategy(df_price['closeprice'], df_price['rsi'])
 

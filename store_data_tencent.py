@@ -23,7 +23,7 @@ def store_data_all(stocks_file="stock_test_tencent.txt", write_folder="./tencent
             # 写入文件
             with open(write_folder+"/"+line[0:8]+".json",'w') as fw:
                 fw.write(str(r.json()))
-                # print("stored:"+line[0:8])
+                print("stored:"+line[0:8])
 
 
 # 保持A股上市以来的所有数据
