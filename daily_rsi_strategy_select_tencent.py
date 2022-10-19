@@ -30,44 +30,46 @@ for stockname in stock_names:
         buy_list_today.append(stockname)
 
 buy_list_last_day_good = dict()
-with open("results_tencent.txt") as f:
-    idx = 0
-    switch = False
-    for line in f:
+if len(buy_list_last_day) > 0:
+    with open("results_tencent.txt") as f:
+        idx = 0
+        switch = False
+        for line in f:
         
-        if line.find(buy_list_last_day[idx]) != -1:
-            switch = True
+            if line.find(buy_list_last_day[idx]) != -1:
+                switch = True
 
-        pos = line.find("总年化收益：")
+            pos = line.find("总年化收益：")
         
-        if switch and pos != -1:
-            buy_list_last_day_good[buy_list_last_day[idx]] = float(line[pos + 6:-2])
-            idx += 1
-            switch = False
+            if switch and pos != -1:
+                buy_list_last_day_good[buy_list_last_day[idx]] = float(line[pos + 6:-2])
+                idx += 1
+                switch = False
 
-            if idx >= len(buy_list_last_day):
-                break
+                if idx >= len(buy_list_last_day):
+                    break
 
 print("yesterday:{}".format(sorted(buy_list_last_day_good.items(),key=lambda s:s[1])))
 
 
 buy_list_today_good = dict()
-with open("results_tencent.txt") as f:
-    idx = 0
-    switch = False
-    for line in f:
+if len(buy_list_today) > 0:
+    with open("results_tencent.txt") as f:
+        idx = 0
+        switch = False
+        for line in f:
         
-        if line.find(buy_list_today[idx]) != -1:
-            switch = True
+            if line.find(buy_list_today[idx]) != -1:
+                switch = True
 
-        pos = line.find("总年化收益：")
+            pos = line.find("总年化收益：")
         
-        if switch and pos != -1:
-            buy_list_today_good[buy_list_today[idx]] = float(line[pos + 6:-2])
-            idx += 1
-            switch = False
+            if switch and pos != -1:
+                buy_list_today_good[buy_list_today[idx]] = float(line[pos + 6:-2])
+                idx += 1
+                switch = False
 
-            if idx >= len(buy_list_today):
-                break
+                if idx >= len(buy_list_today):
+                    break
 
 print("today:{}".format(sorted(buy_list_today_good.items(),key=lambda s:s[1])))
