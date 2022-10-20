@@ -98,14 +98,14 @@ if len(hold_list) > 0:
                 if idx >= len(hold_list):
                     break
 
-print("\n=================================== 10-day holding ===================================")
+print("\n================================================= 10-day holding =================================================")
 for k, v in sorted(hold_list_good.items(),key=lambda s:-s[1]):
-    print("代码: {}\t\t历史收益: {}%\t\t持有天数: {}\t\t买价: {}\t\t现价: {}".format(k[0], v, k[1], k[2], k[3]))
+    print("代码: {}\t\t历史年收: {}%\t\t持有天数: {}\t\t买价: {}\t\t现价: {}".format(k[0], v, k[1], k[2], k[3]))
 
-print("\n================================= yesterday buypoint =================================")
+print("\n=============================================== yesterday buypoint ===============================================")
 for k, v in sorted(buy_list_last_day_good.items(),key=lambda s:-s[1]):
-    print("代码: {}\t\t历史收益: {}%\t\t买价: {}".format(k[0], v, k[1]))
+    print("代码: {}\t\t历史年收: {}%\t\t买价: {}".format(k[0], v, k[1]))
 
-print("\n=================================== today buypoint ===================================")
+print("\n================================================= today buypoint =================================================")
 for k, v in sorted(buy_list_today_good.items(),key=lambda s:-s[1]):
-    print("代码: {}\t\t历史收益: {}%\t\t买价: {}".format(k[0], v, k[1]))
+    print("代码: {}\t\t历史年收: {}%\t\t买价: {}".format(k[0], v, k[1]))
