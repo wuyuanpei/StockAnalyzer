@@ -10,9 +10,10 @@ def store_data_all(stocks_file="stock_test_tencent.txt", write_folder="./tencent
             url = "https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=" + line[0:8].lower() + ",day,2020-1-1," + time.strftime("%Y-%m-%d") + ",1000,qfq"
                 
             try:
-                r = requests.get(url)
+                r = requests.get(url, timeout=5)
             except BaseException: # 请求失败,可能是因为被暂时屏蔽
                 print("Cannot connect to server for {}!".format(line[0:8]))
+                print("if this error repeats, you can press Ctrl-C")
                 continue
                 
             if r.status_code == 404 or r.status_code == 403:
@@ -23,7 +24,7 @@ def store_data_all(stocks_file="stock_test_tencent.txt", write_folder="./tencent
             # 写入文件
             with open(write_folder+"/"+line[0:8]+".json",'w') as fw:
                 fw.write(str(r.json()))
-                print("stored:"+line[0:8])
+                # print("stored:"+line[0:8])
 
 
 # 保持A股上市以来的所有数据
