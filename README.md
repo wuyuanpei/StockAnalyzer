@@ -33,7 +33,7 @@ When you would like to sell stocks, you can first register the stock indices in 
 ```
 $ python3 ./daily_rsi_strategy_sell_tencent.py
 ```
-Also, you would like to run the following commands regularly to store the recent decisions and data about the strategy:s
+Also, you would like to run the following commands regularly to store the recent decisions and data about the strategy:
 ```
 $ python3 ./daily_rsi_strategy_test_tencent.py > results_tencent.txt
 
